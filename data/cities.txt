@@ -1,0 +1,30 @@
+New York,40.7128,-74.0060
+Chicago,41.8781,-87.6298
+San Diego,32.7157,-117.1611
+Washington,38.9072,-77.0369
+Los Angeles,34.0522,-118.2437
+Houston,29.7604,-95.3698
+Atlanta,33.7490,-84.3880
+San Francisco,37.7749,-122.4194
+Seattle,47.6062,-122.3321
+Austin,30.2672,-97.7431
+Philadelphia,39.9526,-75.1652
+Denver,39.7392,-104.9903
+Dallas,32.7767,-96.7970
+Portland,45.5122,-122.6587
+Boston,42.3601,-71.0589
+Raleigh,35.7796,-78.6382
+Brooklyn,40.6782,-73.9442
+Orlando,28.5383,-81.3792
+Phoenix,33.4484,-112.0740
+Las Vegas,36.1699,-115.1398
+Minneapolis,44.9778,-93.2650
+Charlotte,35.2271,-80.8431
+Sacramento,38.5816,-121.4944
+San Antonio,29.4241,-98.4936
+Tampa,27.9506,-82.4572
+Fort Lauderdale,26.1224,-80.1373
+San Jose,37.3382,-121.8863
+Saint Louis,38.6270,-90.1994
+Miami,25.7617,-80.1918
+Pittsburgh,40.4406,-79.9959
