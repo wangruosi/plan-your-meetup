@@ -53,6 +53,19 @@ def load_category_topic_mapping():
     return mapping
 
 
+def load_topic_mapping(topic_num=20):
+    """
+    load a dictionory of topic id mapping
+    """
+    file = os.path.join(data_path, 'topics_mapping.txt')
+    mapping = dict()
+    with open(file, 'r') as f:
+        for line in f.readlines():
+            topic, tid = line.strip().split(',')
+            mapping[topic] = int(tid.strip())
+    return mapping
+
+
 def load_topics(topic_num=20):
     """
     load a list of topics
