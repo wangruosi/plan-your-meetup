@@ -1,7 +1,7 @@
 """
 Visualization
 """
-from .helper import (load_cities,
+from helper import (load_cities,
                      load_topics,
                      load_city_coordinates)
 

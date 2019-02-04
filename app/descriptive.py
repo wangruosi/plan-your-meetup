@@ -5,7 +5,7 @@ and venue locations.
 Ruosi Wang ruosiwang.psy@gmail.com
 """
 
-from .spark_data import make_DF
+from spark_data import make_DF
 
 import os
 import pandas as pd

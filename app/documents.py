@@ -1,14 +1,6 @@
 
-""" to-do-list:
-module import
-Traceback (most recent call last):
-  File "app/documents.py", line 2, in <module>
-    from .spark_data import make_rdd
-ModuleNotFoundError: No module named '__main__.spark_data'; '__main__' is not a package
-
-"""
-from app.spark_data import make_rdd
-from app.helper import (load_category_topic_mapping,
+from spark_data import make_rdd
+from helper import (load_category_topic_mapping,
                         get_path, load_topic_mapping)
 
 import os

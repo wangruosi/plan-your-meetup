@@ -3,7 +3,7 @@ Set up PySpark data structure
 
 Ruosi Wang ruosiwang.psy@gmail.com
 """
-from .helper import load_category_topic_mapping
+from helper import load_category_topic_mapping
 
 import os
 import re
