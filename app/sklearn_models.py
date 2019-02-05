@@ -2,7 +2,7 @@
 Sickit-learn models
 @Ruosi Wang ruosiwang.psy@gmail.com
 """
-from helper import get_path
+from helper import get_path, load_stopwords
 
 import pickle
 import os
@@ -56,7 +56,10 @@ def build_SKM(model_type=None, max_features=None, selectK=None, params={}):
         pipe.steps.insert(0, ('fselect', SelectKBest(chi2, k=selectK)))
 
     # Tfidf Vectorizer
-    pipe.steps.insert(0, ('TfidfVec', TfidfVectorizer(max_features=max_features)))
+    stopwords = load_stopwords()
+    tfvect = TfidfVectorizer(max_features=max_features,
+                            stop_words = stopwords)
+    pipe.steps.insert(0, ('TfidfVec', tfvect))
     return pipe
 
 
