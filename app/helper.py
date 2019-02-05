@@ -93,4 +93,14 @@ def load_glove(embedding_dim=50):
             embedding[word] = vec
     return embedding
 
+
+def load_stopwords():
+    """
+    load stop words for NLP
+    """
+    file = get_path('data', 'stop_words.txt')
+    with open(file, 'r') as f:
+        lines = f.readlines()
+    return [l.strip() for l in lines]
+
 # ------------------------------------------------- #
