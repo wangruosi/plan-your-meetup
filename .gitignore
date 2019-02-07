@@ -2,5 +2,7 @@
 venv
 data/*
 !data/*.txt
+results/classifications/*
+!results/classifications/*.txt
 __pycache__
 spark-warehouse
