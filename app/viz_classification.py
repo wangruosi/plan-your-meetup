@@ -17,16 +17,17 @@ from wordcloud import WordCloud
 
 import matplotlib.pyplot as plt
 from bokeh.palettes import Reds8
-from bokeh.plotting import figure
-from bokeh.models import (ColumnDataSource, LinearColorMapper, Span,
+from bokeh.plotting import figure, output_notebook, show
+from bokeh.models import (ColumnDataSource, LinearColorMapper,
                           BasicTicker, PrintfTickFormatter, ColorBar)
 from bokeh.core.properties import value
 from bokeh.transform import dodge
 
-
+output_notebook()
 
 # ------------------------------------------------- #
 # word cloud of meetup topics
+
 
 def _get_lemma(words):
     lemma_dict = dict()
@@ -37,80 +38,87 @@ def _get_lemma(words):
             lemma_dict[lemma] = len(words) + i
     return lemma_dict
 
+
 def _cal(topic_num):
-    return (topic_num // 5 + (topic_num % 5 != 0) ) * 5
+    return (topic_num // 5 + (topic_num % 5 != 0)) * 5
+
 
 def _get_top_lemma(topic_num, feature_num):
     file = get_path('results', 'models', f'MNB_{topic_num:02d}')
     model = pickle.load(open(file, 'rb'))
     topics = load_topics()[:topic_num]
-    
+
     top_words = most_important_features(model, feature_num)
     lemma_dict = OrderedDict()
     for topic, words in zip(topics, top_words):
         lemma_dict[topic] = _get_lemma(words)
     return lemma_dict
-    
 
-def plot_word_cloud(topic_num=5, feature_num=25, row_num=None):
+
+def plot_word_cloud(topic_num=5, feature_num=25):
     """
     plot critical features as word cloud
     """
     lemma_dict = _get_top_lemma(_cal(topic_num), feature_num)
-    
+
     col_num, plot_size = 3, 4
     row_num = math.ceil(topic_num / col_num)
-    
-    fig, axs = plt.subplots(row_num, col_num, 
-                            figsize=(col_num * plot_size, 
+
+    fig, axs = plt.subplots(row_num, col_num,
+                            figsize=(col_num * plot_size,
                                      row_num * plot_size))
     axs = axs.ravel()
-    
-    sbp_info = list(zip(np.tile(np.array(range(row_num)), (col_num, 1)).T.flatten(),
-                        np.tile(np.array(range(col_num)), row_num)))
 
     for idx, topic in enumerate(lemma_dict):
         if idx >= topic_num:
             break
-        
+
         word_cloud = WordCloud(width=400, height=400,
                                max_font_size=80,
-                              background_color="white")
+                               background_color="white")
         word_cloud.generate_from_frequencies(lemma_dict[topic])
         # i, j = sbp_info[idx]
         axs[idx].imshow(word_cloud, interpolation='bilinear')
         axs[idx].set_title(topic, size=20)
-    
-    [axi.set_axis_off() for axi in axs]
-    plt.show()
-    
-# ------------------------------------------------- #
-# benchmark classification results 
 
-def save_classifications(model_list, topic_nums):
+    [axi.set_axis_off() for axi in axs]
+    plt.subplots_adjust(wspace=.3, hspace=.3)
+
+    plt.show()
+
+# ------------------------------------------------- #
+# benchmark classification results
+
+
+def save_classifications(DNN_models=[], SKL_models=[], topic_nums=[]):
     """
     get model classification results and save them as a txt file
     """
-    
-    tuples = list(product(topic_nums, model_list)) 
+    model_list = DNN_models + SKL_models
+    tuples = list(product(topic_nums, model_list))
     index = pd.MultiIndex.from_tuples(tuples, names=['topic_num', 'model'])
 
     f1_results, acc_results = [], []
     for topic_num, model in tuples:
-        file = get_path('results', 'classifications', 
-                        f'{model}_{topic_num:02d}')
+        if model in DNN_models:
+            file_name = f'{model}_t{topic_num: 02d}_l1200_d0.2'
+        elif model in SKL_models:
+            file_name = f'{model}_{topic_num: 02d}'
+        file = get_path('results', 'classifications', file_name)
         f1, acc, _ = pickle.load(open(file, 'rb'))
         f1_results.append(f1)
         acc_results.append(acc)
     df = pd.DataFrame({'f1': f1_results, 'acc': acc_results}, index=index)
     file = get_path('results', 'classifications', 'summary.txt')
-    
+
     df.to_csv(file)
+
 
 def _load_classification():
     file = get_path('results', 'classifications', 'summary.txt')
-    df = pd.read_csv(file, index_col=[0,1])
+    df = pd.read_csv(file, index_col=[0, 1])
     return df
+
 
 def plot_topic_classifications(metric='f1'):
     """
@@ -128,14 +136,14 @@ def plot_topic_classifications(metric='f1'):
     models = scores.T.sort_values([20], ascending=False).index[:5]
     dis = [-0.3, -0.15, 0, 0.15, 0.3]
 
-    p = figure(x_range=data['topic'], y_range=(.6, 1), 
+    p = figure(x_range=data['topic'], y_range=(0, 1),
                plot_height=350, plot_width=550,
                title="Meetup Topic Classification",
                toolbar_location=None, tools="",
-               tooltips="score: $y")
+               tooltips="score: $topic")
 
     for i in range(len(models)):
-        p.vbar(x=dodge('topic', dis[i], range=p.x_range), 
+        p.vbar(x=dodge('topic', dis[i], range=p.x_range),
                top=models[i], width=0.12, source=source,
                color=colors[i], legend=value(models[i]))
 
@@ -144,17 +152,18 @@ def plot_topic_classifications(metric='f1'):
     p.yaxis.minor_tick_line_color = None
     p.xaxis.axis_label = "Number of Topics to Classify"
     p.yaxis.axis_label = f'{metric} score'
-    p.legend.location = "top_left"
+    p.legend.location = "top_right"
     p.legend.orientation = "horizontal"
 
-    return p
+    show(p)
 
 # ------------------------------------------------- #
 # classification confusion matrix
 
+
 def _load_conf_matrix(model_name):
     file = get_path('results', 'classifications', model_name)
-    _, _,conf_mat = pickle.load(open(file, 'rb'))
+    _, _, conf_mat = pickle.load(open(file, 'rb'))
     return conf_mat
 
 
@@ -162,36 +171,34 @@ def _conf_mat2df(conf_mat, topics):
     """
     convert confusion matrix to dataframe
     """
-    normalized = conf_mat * 100 / conf_mat.sum(axis=0) 
+    normalized = conf_mat * 100 / conf_mat.sum(axis=0)
 
-    raw = pd.DataFrame(conf_mat, index = topics, columns = topics).stack()
-    normalized = pd.DataFrame(normalized, index = topics, columns = topics).stack()
+    raw = pd.DataFrame(conf_mat, index=topics, columns=topics).stack()
+    normalized = pd.DataFrame(normalized, index=topics, columns=topics).stack()
 
-    df =  pd.concat([raw, normalized], axis=1).reset_index()
+    df = pd.concat([raw, normalized], axis=1).reset_index()
     df.columns = ['x', 'y', 'count', 'percentage']
     return df
 
 
 def plot_conf_matrix(model_name, topic_num):
     """
-    plot confusion matrix 
+    plot confusion matrix
 
     """
     topics = load_topics()[:topic_num]
     file = f'{model_name}_{topic_num:02d}'
     conf_mat = _load_conf_matrix(file)
     df = _conf_mat2df(conf_mat, topics)
-    
-    
+
     colors = list(reversed(Reds8))
     mapper = LinearColorMapper(palette=colors,
                                low=0, high=20)
 
     p = figure(title=f'{model_name} | Confusion Matrix (Normalized)',
-               y_range=list(reversed(topics)), x_range= topics,
-               plot_width=500, plot_height= 400,
-               tools="", tooltips=[('count', '@count' ),('percentage', '@percentage%')])
-
+               y_range=list(reversed(topics)), x_range=topics,
+               plot_width=500, plot_height=400,
+               tools="", tooltips=[('count', '@count'), ('percentage', '@percentage{1.1}%')])
 
     p.grid.grid_line_color = None
     p.axis.axis_line_color = None
@@ -205,7 +212,7 @@ def plot_conf_matrix(model_name, topic_num):
            fill_color={'field': 'percentage', 'transform': mapper},
            line_color=None)
 
-    color_bar = ColorBar(color_mapper=mapper, major_label_text_font_size="5pt",
+    color_bar = ColorBar(color_mapper=mapper, major_label_text_font_size="8pt",
                          ticker=BasicTicker(desired_num_ticks=len(colors)),
                          formatter=PrintfTickFormatter(format="%f%%"),
                          label_standoff=8, border_line_color=None, location=(2, 0))
@@ -213,4 +220,13 @@ def plot_conf_matrix(model_name, topic_num):
     p.yaxis.axis_label = 'Actural Topics'
     p.xaxis.axis_label = 'Predicted Topics'
 
-    return p
+    show(p)
+
+
+if __name__ == '__main__':
+    DNN_models = ['CNN', 'CNN_GRU', 'GRU']
+    SKL_models = ['MNB', 'SVC']
+    topic_nums = [5, 10, 15, 20]
+    save_classifications(DNN_models=DNN_models,
+                         SKL_models=SKL_models,
+                         topic_nums=topic_nums)

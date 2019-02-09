@@ -4,7 +4,7 @@ meetup documents topic classifier
 
 Example:
 
-> python topic_classifier.py --model GRU --topic_num 10 
+> python topic_classifier.py --model GRU --topic_num 10
 
 """
 
@@ -82,9 +82,11 @@ if __name__ == '__main__':
     parser.add_argument('--max_seq_len', type=int, default=500,
                         help='What is the max sequence length for padding')
     parser.add_argument('--max_num_words', type=int, default=20000,
-                        help='What is max number of words?')
+                        help='What is the max number of words?')
     parser.add_argument('--epoch', type=int, default=10,
                         help='what is the number of epoch?')
+    parser.add_argument('--drop_out', type=float, default=0.2,
+                        help='what is the drop out rate?')
     args = parser.parse_args()
 
     # load training documents data and model info
@@ -93,7 +95,7 @@ if __name__ == '__main__':
     models_info = load_model_info()
 
     # model details
-    model_name = f'{args.model}_{args.topic_num:02d}'
+    model_name = f'{args.model}_t{args.topic_num:02d}_l{args.max_seq_len}_d{args.drop_out}'
     model_group = models_info[args.model]['group']
     params = models_info[args.model]['params']
 
@@ -136,7 +138,7 @@ if __name__ == '__main__':
         model = build_DNN(
             embedding_matrix, topic_num=args.topic_num,
             max_sequence_length=args.max_seq_len,
-            model_type=args.model,
+            model_type=args.model, drop_out=args.drop_out
         )
 
         # train and save
