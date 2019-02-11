@@ -1,5 +1,5 @@
 """
-Explorative data analysis of events occurance
+Explorative data analysis of events occurrence
 and venue locations.
 
 Ruosi Wang ruosiwang.psy@gmail.com
@@ -18,7 +18,7 @@ import pyspark.sql.functions as F
 from pyspark.sql.functions import col, udf
 
 
-occurance_path = get_path('results', 'explorative', 'occurrance')
+occurrence_path = get_path('results', 'explorative', 'occurrence')
 venues_path = get_path('results', 'explorative', 'venues')
 # ------------------------------------------------- #
 # helper functions for transforming datetime
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     df_venue = make_DF(sc, 'venue')
 
     # ------------------------------------------------- #
-    # Events occurance
+    # Events occurrence
 
     event_time_info = df_event \
         .select(col('event_id'), col('group_id'), col('time')) \
@@ -79,37 +79,37 @@ if __name__ == '__main__':
 
     # year trends
     year_group = ['city', 'topic', 'year']
-    yearly_occurrance = event_time_info \
+    yearly_occurrence = event_time_info \
         .groupBy(year_group) \
         .count().sort(year_group) \
         .toPandas().set_index(year_group) \
         .unstack(-1).fillna(0).astype(int)
-    yearly_occurrance.to_pickle(os.path.join(occurance_path, 'yearly'))
+    yearly_occurrence.to_pickle(os.path.join(occurrence_path, 'yearly'))
 
-    # daily occurance
+    # daily occurrence
     weekday_group = ['city', 'topic', 'weekday']
-    daily_occurance = event_time_info \
+    daily_occurrence = event_time_info \
         .groupBy(weekday_group) \
         .count().sort(weekday_group) \
         .toPandas().set_index(weekday_group) \
         .unstack(-1).fillna(0).astype(int)
-    daily_occurance.to_pickle(os.path.join(occurance_path, 'daily'))
+    daily_occurrence.to_pickle(os.path.join(occurrence_path, 'daily'))
 
-    # hourly occurance
+    # hourly occurrence
     hour_group = ['city', 'topic', 'hour']
-    weekday_hourly_occurance = event_time_info \
+    weekday_hourly_occurrence = event_time_info \
         .filter(event_time_info.weekday < 6) \
         .groupBy(hour_group).count().sort(hour_group) \
         .toPandas().set_index(hour_group) \
         .unstack(-1).fillna(0).astype(int)
-    weekday_hourly_occurance.to_pickle(os.path.join(occurance_path, 'hourly_weekday'))
+    weekday_hourly_occurrence.to_pickle(os.path.join(occurrence_path, 'hourly_weekday'))
 
-    weekend_hourly_occurance = event_time_info \
+    weekend_hourly_occurrence = event_time_info \
         .filter(event_time_info.weekday > 5) \
         .groupBy(hour_group).count().sort(hour_group) \
         .toPandas().set_index(hour_group) \
         .unstack(-1).fillna(0).astype(int)
-    weekend_hourly_occurance.to_pickle(os.path.join(occurance_path, 'hourly_weekend'))
+    weekend_hourly_occurrence.to_pickle(os.path.join(occurrence_path, 'hourly_weekend'))
 
     # ------------------------------------------------- #
     # Venues
