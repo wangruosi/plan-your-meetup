@@ -96,6 +96,7 @@ def save_classifications(DNN_models=[], SKL_models=[], topic_nums=[]):
     """
     model_list = DNN_models + SKL_models
     tuples = list(product(topic_nums, model_list))
+    print(tuples)
     index = pd.MultiIndex.from_tuples(tuples, names=['topic_num', 'model'])
 
     f1_results, acc_results = [], []
@@ -105,6 +106,7 @@ def save_classifications(DNN_models=[], SKL_models=[], topic_nums=[]):
         elif model in SKL_models:
             file_name = f'{model}_{topic_num: 02d}'
         file = get_path('results', 'classifications', file_name)
+        print(file)
         f1, acc, _ = pickle.load(open(file, 'rb'))
         f1_results.append(f1)
         acc_results.append(acc)
@@ -133,14 +135,13 @@ def plot_topic_classifications(metric='f1'):
     colors = ['#ED6A5A', '#F4F1BB', '#9BC1BC', '#5CA4A9',
               '#E6EBE0', '#dcf5ff', '#e6c86e', '#508cd7']
 
-    models = scores.T.sort_values([20], ascending=False).index[:5]
+    models = scores.T.sort_values([20], ascending=False).index
     dis = [-0.3, -0.15, 0, 0.15, 0.3]
 
     p = figure(x_range=data['topic'], y_range=(0, 1),
                plot_height=350, plot_width=550,
                title="Meetup Topic Classification",
-               toolbar_location=None, tools="",
-               tooltips="score: $topic")
+               toolbar_location=None, tools="")
 
     for i in range(len(models)):
         p.vbar(x=dodge('topic', dis[i], range=p.x_range),
