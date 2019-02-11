@@ -1,1 +1,1 @@
-# plan-your-meetup
+# Plan Your Meetup
