@@ -3,4 +3,4 @@
 
 
 
-## [venues] (https://ruosiwang.github.io/plan-your-meetup/doc/Deliverable.html)
+## [Explore Venues](https://ruosiwang.github.io/plan-your-meetup/doc/Deliverable.html)
