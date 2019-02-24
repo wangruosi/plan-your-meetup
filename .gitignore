@@ -1,4 +1,5 @@
 *.ipynb
+app/.ipynb_checkpoints/
 venv
 data/*
 !data/*.txt

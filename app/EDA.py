@@ -1,5 +1,5 @@
 """
-Explorative data analysis of events occurrence
+Exploratory data analysis of events occurrence
 and venue locations.
 
 Ruosi Wang ruosiwang.psy@gmail.com
@@ -18,8 +18,8 @@ import pyspark.sql.functions as F
 from pyspark.sql.functions import col, udf
 
 
-occurrence_path = get_path('results', 'explorative', 'occurrence')
-venues_path = get_path('results', 'explorative', 'venues')
+occurrence_path = get_path('results', 'EDA', 'occurrence')
+venues_path = get_path('results', 'EDA', 'venues')
 # ------------------------------------------------- #
 # helper functions for transforming datetime
 
