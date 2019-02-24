@@ -1,5 +1,5 @@
 """
-Visualizations of'explorative analysis
+Visualizations of exploratory data analysis
 Ruosi Wang ruosiwang.psy@gmail.com
 """
 from helper import (load_cities,
@@ -22,8 +22,8 @@ from bokeh.palettes import Category10_3, Category10, Category20, Reds8
 
 
 base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", 'results'))
-occurrence_path = os.path.join(base_path, 'explorative', 'occurrence')
-venues_path = os.path.join(base_path, 'explorative', 'venues')
+occurrence_path = os.path.join(base_path, 'EDA', 'occurrence')
+venues_path = os.path.join(base_path, 'EDA', 'venues')
 
 DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 TIME = {9: '9 am', 12: '12 pm', 15: '3 pm', 18: '6 pm', 21: '9 pm'}

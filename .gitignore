@@ -1,7 +1,11 @@
 *.ipynb
+app/.ipynb_checkpoints/
 venv
 data/*
 !data/*.txt
+results/EDA/occurrence/*
+!results/EDA/occurrence/Boston_Social
+!results/EDA/occurrence/Boston_career-business
 results/classifications/*
 !results/classifications/*.txt
 __pycache__
