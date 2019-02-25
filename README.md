@@ -2,7 +2,7 @@
 
 ### Summary:
 
-**Plan Your Meetup** is a web service that helps novice hosts better plan their events, by providing various insights about meetup scheduling, publicity ideas, and recommendations.
+[**Plan Your Meetup**][0] is a web service that helps novice hosts better plan their events, by providing various insights about meetup scheduling, publicity ideas, and recommendations.
 
 ### Dataset:
 
@@ -28,6 +28,7 @@ We are building a hybrid recommender system which combined content and collabora
 
 This app could help organizers explore fantastic venue options and get recommendations favored by other hosts.
 
+[0]:https://narrow-street.github.io/plan-your-meetup/
 [1]:https://www.meetup.com/meetup_api/
 [2]:https://pypi.org/project/meetup-api/
 [3]:https://github.com/narrow-street/plan-your-meetup/blob/master/app/EDA.py
