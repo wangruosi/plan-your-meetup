@@ -12,7 +12,7 @@ nltk>=3.4.5
 numpy==1.16.0
 packaging==19.0
 pandas==0.24.0
-Pillow==5.4.1
+Pillow==9.0.0
 py4j==0.10.7
 pyparsing==2.3.1
 pyspark==2.4.0
