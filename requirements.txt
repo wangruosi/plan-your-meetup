@@ -15,7 +15,7 @@ pandas==0.24.0
 Pillow==5.4.1
 py4j==0.10.7
 pyparsing==2.3.1
-pyspark==2.4.0
+pyspark==3.2.2
 python-dateutil==2.7.5
 pytz==2018.9
 scikit-learn==0.20.2
